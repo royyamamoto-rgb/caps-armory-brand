@@ -16,6 +16,13 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: pack brand into a tarball
+        id: pack
+        run: |
+          set -euxo pipefail
+          npm pack
+          TGZ=$(ls capsarmory-brand-*.tgz | head -1)
+          echo "tgz=$GITHUB_WORKSPACE/$TGZ" >> "$GITHUB_OUTPUT"
       - name: scratch nextjs project
         run: |
           set -euxo pipefail
@@ -26,7 +33,7 @@ jobs:
             "dependencies": { "next": "16.1.6", "react": "19.2.3", "react-dom": "19.2.3" } }
           EOF
           npm install --silent
-          npm install --silent file:$GITHUB_WORKSPACE
+          npm install --silent "${{ steps.pack.outputs.tgz }}"
           mkdir -p app
           cat > app/layout.tsx <<'EOF'
           import "@capsarmory/brand/tokens/dark.css";

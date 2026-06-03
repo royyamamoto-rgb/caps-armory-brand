@@ -16,13 +16,20 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: pack brand into a tarball
+        id: pack
+        run: |
+          set -euxo pipefail
+          npm pack
+          TGZ=$(ls capsarmory-brand-*.tgz | head -1)
+          echo "tgz=$GITHUB_WORKSPACE/$TGZ" >> "$GITHUB_OUTPUT"
       - name: scratch expo project
         run: |
           set -euxo pipefail
           mkdir -p /tmp/scratch-expo
           cd /tmp/scratch-expo
           npx --yes create-expo-app@latest . --template blank-typescript --yes
-          npm install --silent file:$GITHUB_WORKSPACE
+          npm install --silent "${{ steps.pack.outputs.tgz }}"
           cat > test-resolution.mjs <<'EOF'
           import tokens from "@capsarmory/brand/manifest" with { type: "json" };
           import { DarkPalette } from "@capsarmory/brand/tokens/dark";
