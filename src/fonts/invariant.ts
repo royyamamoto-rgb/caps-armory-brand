@@ -33,13 +33,19 @@ export function assertOneWoff2PerRange(css: string, fontsDir: string): void {
     throw new Error("no @font-face blocks parsed");
   }
 
+  // Phase 1: enforce uniqueness of unicode-range across all blocks before any
+  // FS lookups (so duplicate-range failures aren't masked by missing-file errors
+  // when the same fixture references files that don't exist on disk).
   const seenRanges = new Set<string>();
   for (const b of blocks) {
     if (seenRanges.has(b.range)) {
       throw new Error(`duplicate unicode-range found: ${b.range}`);
     }
     seenRanges.add(b.range);
+  }
 
+  // Phase 2: per-block sanity (font-display + file existence).
+  for (const b of blocks) {
     if (b.display !== "swap") {
       throw new Error(
         `@font-face missing font-display: swap (range: ${b.range})`,
