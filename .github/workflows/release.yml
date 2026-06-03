@@ -47,17 +47,10 @@ jobs:
             exit 1
           fi
 
-      - name: changesets version + publish
+      - name: changesets publish
         run: |
-          # If a pre-release version has already been baked locally and pushed
-          # (Task 29 workflow), skip the version step — the package.json + changelog
-          # are already in their published shape. Otherwise call `changeset version`.
-          if [ -n "$(ls .changeset/*.md 2>/dev/null | grep -v README.md || true)" ]; then
-            pnpm changeset version
-            git config user.name "github-actions"
-            git config user.email "github-actions@users.noreply.github.com"
-            git add -A
-            git commit -m "release: $(node -p "require('./package.json').version")" || true
-            git push origin main || true
-          fi
-          pnpm changeset publish --tag ${{ inputs.dist_tag }} --provenance
+          # The version was already baked locally (Task 29: `changeset version` in
+          # pre-alpha mode produced 0.0.1-alpha.0). In pre mode the tag is implicit
+          # from .changeset/pre.json#tag — passing --tag explicitly is rejected.
+          # We also drop --provenance until npm trusted-publisher is configured.
+          pnpm changeset publish --no-git-tag
