@@ -48,9 +48,10 @@ jobs:
           fi
 
       - name: changesets publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          # The version was already baked locally (Task 29: `changeset version` in
-          # pre-alpha mode produced 0.0.1-alpha.0). In pre mode the tag is implicit
-          # from .changeset/pre.json#tag — passing --tag explicitly is rejected.
-          # We also drop --provenance until npm trusted-publisher is configured.
+          # Auth via NPM_TOKEN (lumina28 granular publish token, expires 2026-07-03).
+          # Follow-up: rotate to OIDC trusted-publisher + restore --provenance for 0.0.1-alpha.1.
           pnpm changeset publish --no-git-tag
