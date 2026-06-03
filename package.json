@@ -36,6 +36,54 @@
     "LICENSE",
     "CHANGELOG.md"
   ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "import": "./dist/tokens/index.js",
+      "require": "./dist/tokens/index.cjs"
+    },
+    "./tokens/dark": {
+      "types": "./dist/tokens/dark.d.ts",
+      "import": "./dist/tokens/dark.js",
+      "require": "./dist/tokens/dark.cjs"
+    },
+    "./tokens/light": {
+      "types": "./dist/tokens/light.d.ts",
+      "import": "./dist/tokens/light.js",
+      "require": "./dist/tokens/light.cjs"
+    },
+    "./tokens/dark.css": "./dist/tokens/dark.css",
+    "./tokens/light.css": "./dist/tokens/light.css",
+    "./tokens/json": "./dist/tokens/tokens.json",
+    "./fonts/inter.css": "./dist/fonts/inter.css",
+    "./marks/Crest": {
+      "types": "./dist/marks/Crest.d.ts",
+      "import": "./dist/marks/Crest.js",
+      "require": "./dist/marks/Crest.cjs"
+    },
+    "./marks/Wordmark": {
+      "types": "./dist/marks/Wordmark.d.ts",
+      "import": "./dist/marks/Wordmark.js",
+      "require": "./dist/marks/Wordmark.cjs"
+    },
+    "./marks/Iconmark": {
+      "types": "./dist/marks/Iconmark.d.ts",
+      "import": "./dist/marks/Iconmark.js",
+      "require": "./dist/marks/Iconmark.cjs"
+    },
+    "./marks/Crest.svg": "./dist/marks/Crest.svg",
+    "./marks/Wordmark.svg": "./dist/marks/Wordmark.svg",
+    "./marks/Iconmark.svg": "./dist/marks/Iconmark.svg",
+    "./manifest": "./dist/manifest/asset-manifest.json"
+  },
   "sideEffects": [
     "**/*.css"
   ],
