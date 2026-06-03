@@ -1,0 +1,64 @@
+{
+  "name": "@capsarmory/brand",
+  "version": "0.0.0",
+  "description": "CAPS Armory brand surface: tokens, marks, typography, asset manifest",
+  "license": "MIT",
+  "author": "Caps Armory LLC <roy.yamamoto@gmail.com>",
+  "homepage": "https://github.com/royyamamoto-rgb/caps-armory-brand",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/royyamamoto-rgb/caps-armory-brand.git"
+  },
+  "bugs": {
+    "url": "https://github.com/royyamamoto-rgb/caps-armory-brand/issues"
+  },
+  "type": "module",
+  "packageManager": "pnpm@9.12.3",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.12.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:tarball": "tsx scripts/tarball-check.ts",
+    "drift-check": "tsx scripts/drift-detect.ts",
+    "extract-tokens": "tsx scripts/extract-tokens.ts",
+    "extract-fonts": "tsx scripts/extract-fonts.ts",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish --tag alpha"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.27.9",
+    "@fontsource-variable/inter": "5.1.0",
+    "@types/node": "22.9.0",
+    "@types/react": "19.0.1",
+    "happy-dom": "15.11.7",
+    "svgo": "3.3.2",
+    "ts-morph": "24.0.0",
+    "tsup": "8.3.0",
+    "tsx": "4.19.2",
+    "typescript": "5.6.3",
+    "vitest": "3.0.0",
+    "wcag-contrast": "3.0.0"
+  }
+}
