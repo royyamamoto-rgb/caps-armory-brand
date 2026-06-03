@@ -1,0 +1,52 @@
+name: smoke-nextjs
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.3
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: scratch nextjs project
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/scratch-next
+          cd /tmp/scratch-next
+          cat > package.json <<'EOF'
+          { "name": "scratch", "version": "0.0.0", "private": true,
+            "dependencies": { "next": "16.1.6", "react": "19.2.3", "react-dom": "19.2.3" } }
+          EOF
+          npm install --silent
+          npm install --silent file:$GITHUB_WORKSPACE
+          mkdir -p app
+          cat > app/layout.tsx <<'EOF'
+          import "@capsarmory/brand/tokens/dark.css";
+          import "@capsarmory/brand/fonts/inter.css";
+          export default function R({ children }: { children: React.ReactNode }) {
+            return <html><body>{children}</body></html>;
+          }
+          EOF
+          cat > app/page.tsx <<'EOF'
+          import { Crest, Wordmark, Iconmark, resolveAsset, listAssets, AssetNotFoundError } from "@capsarmory/brand";
+          import { DarkPalette } from "@capsarmory/brand/tokens/dark";
+          export default function P() {
+            try { resolveAsset("nope"); } catch (e) { if (!(e instanceof AssetNotFoundError)) throw e; }
+            return <main>
+              <Crest title="x"/><Wordmark title="x"/><Iconmark title="x"/>
+              <pre>{DarkPalette.gold} {String(listAssets().length)}</pre>
+            </main>;
+          }
+          EOF
+          cat > next.config.js <<'EOF'
+          module.exports = {};
+          EOF
+          npx --yes next@16.1.6 build
