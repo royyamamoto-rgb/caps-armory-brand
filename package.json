@@ -101,6 +101,8 @@
     "@types/node": "22.9.0",
     "@types/react": "19.2.3",
     "@types/react-dom": "19.2.3",
+    "@vitest/coverage-istanbul": "3.0.0",
+    "@vitest/coverage-v8": "3.0.0",
     "happy-dom": "15.11.7",
     "react": "19.2.3",
     "react-dom": "19.2.3",

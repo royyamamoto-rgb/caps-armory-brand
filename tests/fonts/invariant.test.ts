@@ -40,4 +40,13 @@ describe("inter.css invariant", () => {
       /no @font-face blocks parsed/,
     );
   });
+
+  it("treats a block missing src/range/display as fully-empty for graceful failure", () => {
+    // No src/range/display fields → src="" range="" display=null
+    // Exercises the `?? ""` / `?? null` fallback branches in parseBlocks().
+    const css = `@font-face { font-family: "X"; }`;
+    expect(() => assertOneWoff2PerRange(css, "src/fonts")).toThrow(
+      /font-display.*swap/i,
+    );
+  });
 });

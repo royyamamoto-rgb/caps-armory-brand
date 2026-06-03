@@ -48,4 +48,8 @@ describe("resolveAsset", () => {
     // Built-in manifest ships empty in 0.0.1-alpha.0.
     expect(listAssets()).toEqual([]);
   });
+
+  it("resolveAsset defaults to built-in manifest (empty) and throws", () => {
+    expect(() => resolveAsset("any/key")).toThrow(AssetNotFoundError);
+  });
 });

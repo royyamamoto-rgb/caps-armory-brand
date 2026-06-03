@@ -60,6 +60,24 @@ describe("fetchThemesAt", () => {
     ).rejects.toThrow(/sha mismatch/i);
   });
 
+  it("defaults ref to 'master' when omitted", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          sha: "abc",
+          encoding: "base64",
+          content: Buffer.from("x").toString("base64"),
+        }),
+        { status: 200 },
+      ),
+    );
+    await fetchThemesAt({ expectedSha: "abc", token: "tok" });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining("?ref=master"),
+      expect.anything(),
+    );
+  });
+
   it("allows skipping SHA check when expectedSha is null (drift head probe)", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(

@@ -52,4 +52,11 @@ describe("assertMarkInvariants", () => {
     const bad = `<svg viewBox="0 0 64 64" fill="currentColor"><path stroke="red" fill="none" d="M0 0z"/></svg>`;
     expect(() => assertMarkInvariants(bad)).toThrow(/stroke must be/i);
   });
+
+  it("rejects non-currentColor fill that isn't a hex literal", () => {
+    // Use named color (no '#') so the hex-literal check passes and we land on
+    // the fill-currentColor check at line 43.
+    const bad = `<svg viewBox="0 0 64 64" fill="currentColor"><path fill="red" d="M0 0z"/></svg>`;
+    expect(() => assertMarkInvariants(bad)).toThrow(/fill must be/i);
+  });
 });

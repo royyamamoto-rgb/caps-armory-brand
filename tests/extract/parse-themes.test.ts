@@ -48,4 +48,41 @@ describe("parseThemes", () => {
     );
     expect(() => parseThemes(bad)).toThrow(/DarkColors not found/i);
   });
+
+  it("throws when DarkColors initializer is not an object literal", () => {
+    const bad = VALID_THEMES_TS.replace(
+      /export const DarkColors: ThemeColors = \{[\s\S]*?\};/,
+      "export const DarkColors: ThemeColors = makePalette();",
+    );
+    expect(() => parseThemes(bad)).toThrow(/initializer is not an object literal/i);
+  });
+
+  it("throws when a property is shorthand (no string-literal value)", () => {
+    const bad = VALID_THEMES_TS.replace(
+      "gold: '#C8A96E',",
+      "gold,",
+    );
+    expect(() => parseThemes(bad)).toThrow(/non-literal entry/i);
+  });
+
+  it("strips an `as const` wrapper", () => {
+    const withAsConst = VALID_THEMES_TS.replace(
+      /export const DarkColors: ThemeColors = (\{[\s\S]*?\});/,
+      "export const DarkColors = $1 as const;",
+    );
+    const { dark } = parseThemes(withAsConst);
+    expect(dark.gold).toBe("#C8A96E");
+  });
+
+  it("normalizes hex values to uppercase", () => {
+    const lowercased = VALID_THEMES_TS.replace("'#C8A96E'", "'#c8a96e'");
+    const { dark } = parseThemes(lowercased);
+    expect(dark.gold).toBe("#C8A96E");
+  });
+
+  it("accepts 8-digit hex (with alpha) values", () => {
+    const withAlpha = VALID_THEMES_TS.replace("'#C8A96E'", "'#C8A96EFF'");
+    const { dark } = parseThemes(withAlpha);
+    expect(dark.gold).toBe("#C8A96EFF");
+  });
 });
