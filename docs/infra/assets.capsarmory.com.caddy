@@ -1,0 +1,31 @@
+# assets.capsarmory.com — @capsarmory/brand asset host
+# Replaces spec-prescribed R2 + Worker pattern with Caddy on US VPS + Cloudflare proxy.
+# Provisioned 2026-06-03 per docs/superpowers/plans/2026-06-02-p1a-brand-foundation-plan.md Task 3.
+
+assets.capsarmory.com {
+  tls internal
+  encode zstd gzip
+  root * /opt/capsarmory-brand-assets
+
+  # Hash-addressed assets under /assets/<hash>/ are immutable
+  @hashedAsset path /assets/*
+  header @hashedAsset Cache-Control "public, max-age=31536000, immutable"
+
+  # LICENSE.txt and root cache briefly
+  @topLevel path /LICENSE.txt /
+  header @topLevel Cache-Control "public, max-age=300"
+
+  # CORS for consuming sites
+  header Access-Control-Allow-Origin "*"
+  header Access-Control-Allow-Methods "GET, HEAD, OPTIONS"
+  header Access-Control-Allow-Headers "Content-Type"
+
+  # 403 anything outside the allowlist
+  @forbidden not path /assets/* /LICENSE.txt /
+  respond @forbidden 403
+
+  file_server {
+    index off
+  }
+
+}
