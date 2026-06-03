@@ -30,7 +30,8 @@ jobs:
           cd /tmp/scratch-next
           cat > package.json <<'EOF'
           { "name": "scratch", "version": "0.0.0", "private": true,
-            "dependencies": { "next": "16.1.6", "react": "19.2.3", "react-dom": "19.2.3" } }
+            "dependencies": { "next": "16.1.6", "react": "19.2.3", "react-dom": "19.2.3" },
+            "devDependencies": { "typescript": "5.6.3", "@types/react": "19.2.3", "@types/react-dom": "19.2.3", "@types/node": "22.9.0" } }
           EOF
           npm install --silent
           npm install --silent "${{ steps.pack.outputs.tgz }}"
